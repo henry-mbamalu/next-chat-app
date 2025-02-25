@@ -7,25 +7,27 @@ import Message from "./components/messages/Message";
 
 const Home = () => {
   const room = "General";
-  const {setAuthUser,  authUser } = useAuthContext()
+  const { setAuthUser, authUser } = useAuthContext()
 
 
   const { messages, sendMessage } = useSocket(room, authUser?.username, authUser?.token);
 
   const lastMessageRef = useRef();
 
-	useEffect(() => {
-		setTimeout(() => {
-			lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
-		}, 100);
-	}, [messages]);
+  useEffect(() => {
+    setTimeout(() => {
+      lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
+  }, [messages]);
 
 
   const [message, setMessage] = useState("");
 
-  const logout = () =>{
-    localStorage.removeItem("user-info")
-    setAuthUser(null)
+  const logout = () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("user-info");
+      setAuthUser(null);
+    }
   }
 
   const handleSend = () => {
@@ -42,8 +44,8 @@ const Home = () => {
       <div className="border p-4 w-96 h-64 overflow-y-auto">
         {messages && messages.map((msg, index) => (
           <div key={index} ref={lastMessageRef}>
-          <Message message={msg} />
-        </div>
+            <Message message={msg} />
+          </div>
           // <p key={index} className="text-sm text-[#fff]">
           //   <strong>{msg.sender}:</strong> {msg.text} <small>({msg.createdAt})</small>
           // </p>

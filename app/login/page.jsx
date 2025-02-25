@@ -19,13 +19,27 @@ const Login = () => {
         }
     }, [authUser])
 
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+          const userInfo = localStorage.getItem("user-info");
+          setAuthUser(userInfo ? JSON.parse(userInfo) : null);
+        }
+      }, []);
+    
+      const storeUserInfo = (userInfo) => {
+        if (typeof window !== "undefined") {
+          localStorage.setItem("user-info", JSON.stringify(userInfo));
+          setAuthUser(userInfo);
+        }
+      };
+
     const handleSignIn = async (e) => {
         e.preventDefault();
         try {
             const { data } = await signIn({ variables: { username, password } });
             const userInfo = { token: data.signIn.accessToken, username: data.signIn.username }
-            localStorage.setItem("user-info", JSON.stringify(userInfo));
-            setAuthUser(userInfo)
+            storeUserInfo(userInfo)
+            
             toast.success("Sign-in successful!");
         } catch (err) {
             toast.error(err.message || "Something went wrong. Please try again.");
