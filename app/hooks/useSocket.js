@@ -27,19 +27,23 @@ export const useSocket = (room, username, token) => {
 
 
         newSocket.on("message", (message) => {
-            console.log(message)
-             if (message.data?.sender && message.data?.text) {
-                setMessages((prev) => [...prev, {...message.data, shouldShake: true}]); 
+            if (message.data?.sender && message.data?.text) {
+                setMessages((prev) => [...prev, { ...message.data, shouldShake: true }]);
                 if (message.data?.sender !== username) {
                     toast.success(`${message.data?.sender}: ${message.data.text}`);
-                }   
+                }
             }
 
-            if ( message.data?.message && message.data?.username) {
+            if (message.data?.message && message.data?.username) {
                 if (message.data?.username != username) {
-                    toast.success(message.data?.message); 
+                    toast.success(message.data?.message);
                 }
-                
+
+            }
+
+            if (message.data?.sender !== username && message.data?.username != username) {
+                const sound = new Audio("/sounds/notification.mp3");
+                sound.play();
             }
         });
 
