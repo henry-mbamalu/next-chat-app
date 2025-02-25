@@ -13,7 +13,6 @@ export const useSocket = (room, username, token) => {
     useEffect(() => {
         if (!username || !room || !token) return;
 
-
         const newSocket = io(SOCKET_URL, {
             auth: { token: `Bearer ${token}` },
             transports: ["websocket"],
@@ -22,9 +21,7 @@ export const useSocket = (room, username, token) => {
         setSocket(newSocket);
 
         newSocket.emit("joinRoom", { username, room });
-
         newSocket.emit("getMessages", { room });
-
 
         newSocket.on("message", (message) => {
             if (message.data?.sender && message.data?.text) {
@@ -36,9 +33,8 @@ export const useSocket = (room, username, token) => {
 
             if (message.data?.message && message.data?.username) {
                 if (message.data?.username != username) {
-                    toast.success(message.data?.message);
+                    toast.success(`${message.data?.room} Room: ${message.data?.message}`);
                 }
-
             }
 
             if (message.data?.sender !== username && message.data?.username != username) {
@@ -64,7 +60,6 @@ export const useSocket = (room, username, token) => {
                 text,
                 timestamp: new Date().toISOString(),
             });
-            console.log(text)
         }
     };
 

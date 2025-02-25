@@ -1,9 +1,9 @@
-"use client"; // Ensure this is a client component
+"use client";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ApolloProviderWrapper from "../app/components/ApolloProviderWrapper";
 import { Toaster } from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { AuthContextProvider, useAuthContext } from "../app/context/AuthContext";
 
@@ -25,16 +25,18 @@ export default function RootLayout({ children }) {
   );
 }
 
-// Separate protected layout to access `useAuthContext`
 function ProtectedLayout({ children }) {
   const { authUser } = useAuthContext();
   const router = useRouter();
+  const pathname = usePathname(); // Get current route
+
+  const publicRoutes = ["/login", "/signup"]; // Allow these pages without auth
 
   useEffect(() => {
-    if (!authUser?.token) {
+    if (!authUser?.token && !publicRoutes.includes(pathname)) {
       router.push("/login");
     }
-  }, [authUser, router]);
+  }, [authUser, pathname, router]);
 
   return (
     <html lang="en">
