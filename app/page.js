@@ -95,7 +95,7 @@ const Home = () => {
     }, 100);
   }, [messages]);
 
-  const logout = () => {
+   const logout = () => {
     if (typeof window !== "undefined") {
       localStorage.removeItem("user-info");
       setAuthUser(null);

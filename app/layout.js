@@ -6,6 +6,7 @@ import { Toaster } from "react-hot-toast";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { AuthContextProvider, useAuthContext } from "../app/context/AuthContext";
+import { isTokenExpired } from "../app/utils/isTokenExpired"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,16 +27,24 @@ export default function RootLayout({ children }) {
 }
 
 function ProtectedLayout({ children }) {
-  const { authUser } = useAuthContext();
+  const { authUser, setAuthUser } = useAuthContext();
   const router = useRouter();
-  const pathname = usePathname(); // Get current route
+  const pathname = usePathname();
 
-  const publicRoutes = ["/login", "/signup"]; // Allow these pages without auth
+  const publicRoutes = ["/login", "/signup"];
 
   useEffect(() => {
     if (!authUser?.token && !publicRoutes.includes(pathname)) {
       router.push("/login");
     }
+
+    if (authUser?.token && isTokenExpired(authUser?.token)) {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("user-info");
+        setAuthUser(null);
+      }
+    }
+
   }, [authUser, pathname, router]);
 
   return (
