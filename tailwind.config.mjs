@@ -6,6 +6,9 @@ export default {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    fontSize: {
+			'9px': '9px',
+		  },
     extend: {
       colors: {
         background: "var(--background)",
@@ -13,5 +16,5 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [require('daisyui')],
 };
