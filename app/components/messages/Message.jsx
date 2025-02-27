@@ -23,9 +23,13 @@ const Message = ({ message }) => {
 					<FaUserCircle className="w-10 h-10 text-white"/>
 				</div>
 			</div>
-			<div className={`chat-bubble text-white ${bubbleBgColor} ${shakeClass} pb-2 relative pt-4`}>
-				<span className="absolute text-xs top-1 left-4 text-9px">{senderName}</span>
-				{message.text}
+			<div className={`chat-bubble text-white ${bubbleBgColor} ${shakeClass} pb-2 relative pt-1`}>
+				<div className="flex-col">
+                     <div className="text-9px">{senderName}</div>
+					 <div>{message.text}</div>
+				</div>
+				
+				
 				</div>
 			<div className='chat-footer opacity-50 text-xs flex gap-1 items-center text-white'>{formattedTime}</div>
 		</div>
